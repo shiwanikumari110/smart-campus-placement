@@ -1,7 +1,30 @@
 <!DOCTYPE html>
-<html><head><title>Register</title>
-<style>body{font-family:Arial;background:#f2f4f8} .card{background:white;max-width:450px;margin:40px auto;padding:25px;border-radius:10px} input,select{width:100%;padding:12px;margin:8px 0} button{background:#198754;color:white;padding:12px;width:100%;border:none;border-radius:6px}</style>
-</head><body><div class="card"><h2>Create Account</h2>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - Smart Campus Placement Portal</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f2f4f8; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.card { background: #fff; width: 100%; max-width: 450px; padding: 28px 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.card h2 { text-align: center; font-size: 22px; color: #1e293b; margin-bottom: 20px; }
+input, select { width: 100%; padding: 13px 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; background: #fff; }
+input:focus, select:focus { border-color: #198754; box-shadow: 0 0 0 2px rgba(25,135,84,0.15); }
+button { background: #198754; color: #fff; padding: 13px; width: 100%; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; margin-top: 12px; cursor: pointer; }
+button:hover { background: #157347; }
+.card p { text-align: center; margin-top: 16px; font-size: 14px; }
+.card p a { color: #0d6efd; text-decoration: none; font-weight: 500; }
+@media (max-width: 480px) {
+body { padding: 12px; align-items: flex-start; padding-top: 30px; }
+.card { padding: 22px 18px; }
+.card h2 { font-size: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>Create Account</h2>
 <form method="post">
 <input name="name" placeholder="Full Name" required>
 <input type="email" name="email" placeholder="Email" required>
@@ -9,5 +32,9 @@
 <select name="role"><option value="Student">Student</option><option value="Company">Company</option><option value="Admin">Admin</option></select>
 <input name="dept" placeholder="Department / Company Name">
 <input name="cgpa" placeholder="CGPA (for Student)">
-<button>Register</button></form>
-<p><a href="/login">Already have account? Login</a></p></div></body></html>
+<button>Register</button>
+</form>
+<p><a href="/login">Already have account? Login</a></p>
+</div>
+</body>
+</html>
