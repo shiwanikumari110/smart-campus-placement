@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html><head><title>Dashboard</title>
+<style>body{font-family:Arial;background:#f2f4f8;margin:0} .top{background:#0d6efd;color:white;padding:15px;text-align:center} .box{background:white;max-width:900px;margin:20px auto;padding:20px;border-radius:10px} .btn{display:inline-block;background:#0d6efd;color:white;padding:10px 15px;margin:5px;border-radius:6px;text-decoration:none} .green{background:#198754} .orange{background:#fd7e14} .red{background:#dc3545} .card{border:1px solid #ddd;padding:12px;margin:10px 0;border-radius:8px}</style>
+</head><body>
+<div class="top"><h2>SMART CAMPUS PLACEMENT PORTAL</h2></div>
+<div class="box">
+<h2>Welcome to Placement Portal</h2>
+{% if session.get('name') %}<p>Logged in as: <b>{{ session.get('name') }} ({{ session.get('role') }})</b></p>{% endif %}
+<p>
+<a class="btn" href="/login">Login</a>
+<a class="btn green" href="/login">Login as Admin</a>
+<a class="btn green" href="/login">Login as Company</a>
+<a class="btn orange" href="/login">Login as Student</a>
+<a class="btn" href="/register">Register</a>
+<a class="btn red" href="/logout">Logout</a>
+</p>
+<h3>Dashboard</h3>
+<p>Total Students: {{ total_students }} | Total Companies: {{ total_companies }} | Drives: {{ total_drives }} | Applications: {{ total_apps }}</p>
+
+<h3>Smart Features</h3>
+<a class="btn" href="/ml_prediction">ML Placement Predictor</a>
+<a class="btn" href="/eligibility_checker">Eligibility Checker</a>
+<a class="btn" href="/ats_analyzer">ATS Analyzer</a>
+<a class="btn" href="/online_test">Online Test</a>
+<a class="btn" href="/interview_coach">Interview Coach</a>
+<a class="btn" href="/ai_assistant">AI Assistant</a>
+<a class="btn" href="/student_profile">Student Profile</a>
+<a class="btn" href="/company_jobs">Company Jobs</a>
+<a class="btn" href="/application_tracking">My Applications</a>
+<a class="btn" href="/analytics">Analytics</a>
+{% if session.get('role') == 'Company' %}<a class="btn green" href="/create_drive">+ Create Drive</a>{% endif %}
+
+{% if session.get('role') == 'Admin' %}
+<h3>Pending Drives - For Admin Approval</h3>
+{% for d in pending_drives %}
+<div class="card"><b>{{ d['company'] }} - {{ d['title'] }}</b><br>{{ d['description'] }} | Min CGPA: {{ d['min_cgpa'] }} | Deadline: {{ d['deadline'] }}<br>
+<a class="btn green" href="/approve_drive/{{ d['id'] }}">Approve</a>
+<a class="btn red" href="/reject_drive/{{ d['id'] }}">Reject</a></div>
+{% endfor %}
+{% if not pending_drives %}<p>No pending drives.</p>{% endif %}
+{% endif %}
+
+{% if session.get('role') == 'Company' %}
+<h3>My Drives</h3>
+{% for d in my_drives %}<div class="card"><b>{{ d['title'] }}</b> - {{ d['status'] }} | Min CGPA: {{ d['min_cgpa'] }} | Deadline: {{ d['deadline'] }}</div>{% endfor %}
+<h3>Applications on My Drives</h3>
+{% for a in applications %}<div class="card">{{ a['student_name'] }} - {{ a['title'] }} - {{ a['status'] }} <a class="btn green" href="/select_student/{{ a['id'] }}">Select</a></div>{% endfor %}
+{% endif %}
+
+<h3>Approved Drives</h3>
+{% for d in drives %}
+<div class="card"><b>{{ d['company'] }} - {{ d['title'] }}</b><br>{{ d['description'] }} | Min CGPA: {{ d['min_cgpa'] }} | Deadline: {{ d['deadline'] }}
+{% if session.get('role') == 'Student' %} | <a href="/apply/{{ d['id'] }}">Apply Now</a>{% endif %}</div>
+{% endfor %}
+{% if not drives %}<p>No approved drives yet.</p>{% endif %}
+</div></body></html>

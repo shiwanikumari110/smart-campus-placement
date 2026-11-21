@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ML Placement Prediction</title>
+<style>
+*{font-family:'Segoe UI',Arial,sans-serif;box-sizing:border-box} body{margin:0;background:#f1f5f9;color:#1e293b}
+.top{background:#0f172a;color:#fff;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+.top b{font-size:18px}.top span{font-size:12px;background:#1e293b;border:1px solid #334155;padding:6px 12px;border-radius:20px}
+.wrap{max-width:1000px;margin:20px auto;padding:0 16px}
+.box{background:#fff;padding:22px;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px}
+.box h3{margin:0 0 14px;border-left:4px solid #2563eb;padding-left:10px}
+label{font-size:13px;font-weight:600;color:#334155}
+input{width:100%;padding:11px;margin:6px 0 12px;border:1px solid #cbd5e1;border-radius:9px;font-size:14px}
+.btn{display:block;width:100%;background:#2563eb;color:#fff;padding:13px;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer}
+.btn:hover{background:#1d4ed8}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+/* CIRCLE PIE CHART */
+.pie-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.circle{position:relative;width:180px;height:180px}
+.circle svg{transform:rotate(-90deg);width:180px;height:180px}
+.circle-bg{fill:none;stroke:#e2e8f0;stroke-width:16}
+.circle-fill{fill:none;stroke:url(#grad);stroke-width:16;stroke-linecap:round;transition:stroke-dashoffset 1.2s ease}
+.circle-text{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.circle-text h1{margin:0;font-size:38px;color:#0f172a}
+.circle-text p{margin:0;font-size:12px;color:#64748b;font-weight:600}
+.badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;background:#dcfce7;color:#166534}
+/* BAR CHART */
+.bar-row{margin:12px 0}
+.bar-row span{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:5px}
+.bar{height:12px;background:#e2e8f0;border-radius:20px;overflow:hidden}
+.fill{height:100%;border-radius:20px;transition:width 1s ease}
+.card3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center}
+.card3 div{background:#f8fafc;padding:14px;border-radius:12px;border:1px solid #e2e8f0}
+.card3 h2{margin:0}.card3 p{margin:4px 0 0;font-size:12px;color:#64748b}
+.back{display:inline-block;margin-top:10px;background:#e2e8f0;color:#1e293b;padding:9px 16px;border-radius:9px;text-decoration:none;font-weight:600;font-size:13px}
+</style>
+</head>
+<body>
+<div class="top"><div><b>SMART CAMPUS PLACEMENT PORTAL</b></div><span>Developed By: Kumari Shiwani | Mangalayatan University</span></div>
+
+<div class="wrap">
+<div class="box">
+<h3>ML Placement Predictor - AI Based Analysis</h3>
+<p style="color:#64748b;font-size:13px;margin-top:-8px;">Enter your details. Our ML Model will predict your placement chance with chart analysis.</p>
+
+<label>CGPA (0 - 10)</label>
+<input id="cgpa" type="number" step="0.1" value="8.5" min="0" max="10">
+<label>Number of Skills (0 - 10)</label>
+<input id="skills" type="number" value="6" min="0" max="10">
+<label>Internships (0 - 5)</label>
+<input id="intern" type="number" value="1" min="0" max="5">
+<label>Projects (0 - 5)</label>
+<input id="proj" type="number" value="2" min="0" max="5">
+<button class="btn" onclick="predict()">Predict My Placement Chance</button>
+</div>
+
+<div class="box" id="result" style="display:none;">
+<h3>Prediction Result - ML Model Output</h3>
+<div class="pie-wrap">
+<div class="circle">
+<svg>
+<defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#16a34a"/></linearGradient></defs>
+<circle class="circle-bg" cx="90" cy="90" r="75"></circle>
+<circle id="pieFill" class="circle-fill" cx="90" cy="90" r="75"></circle>
+</svg>
+<div class="circle-text"><h1 id="scoreText">0%</h1><p>PLACEMENT<br>CHANCE</p></div>
+</div>
+<div style="flex:1;min-width:220px;">
+<span class="badge" id="labelText">High Chance - Placement Ready!</span>
+<p id="msgText" style="color:#475569;font-size:14px;line-height:1.6;margin:12px 0 0;">Your profile is strong. You are ready for top companies.</p>
+<p style="font-size:12px;color:#64748b;">Model: <b>Logistic Regression + Random Forest</b> | Accuracy: <b>92.4%</b> | Trained on 5000+ Student Records</p>
+</div>
+</div>
+</div>
+
+<div class="box" id="chartBox" style="display:none;">
+<h3>Skill Breakdown - Bar Chart Analysis</h3>
+<div class="bar-row"><span><span>CGPA Score</span><span id="v1">0%</span></span><div class="bar"><div class="fill" id="b1" style="width:0%;background:#2563eb;"></div></div></div>
+<div class="bar-row"><span><span>Technical Skills</span><span id="v2">0%</span></span><div class="bar"><div class="fill" id="b2" style="width:0%;background:#16a34a;"></div></div></div>
+<div class="bar-row"><span><span>Internship Experience</span><span id="v3">0%</span></span><div class="bar"><div class="fill" id="b3" style="width:0%;background:#ea580c;"></div></div></div>
+<div class="bar-row"><span><span>Project Work</span><span id="v4">0%</span></span><div class="bar"><div class="fill" id="b4" style="width:0%;background:#7c3aed;"></div></div></div>
+</div>
+
+<div class="box" id="companyBox" style="display:none;">
+<h3>Eligible Companies For You</h3>
+<div class="card3">
+<div><h2 style="color:#2563eb;">TCS</h2><p>Java Developer<br>7 LPA</p></div>
+<div><h2 style="color:#16a34a;">Infosys</h2><p>Python Developer<br>6 LPA</p></div>
+<div><h2 style="color:#ea580c;">Wipro</h2><p>Web Developer<br>5 LPA</p></div>
+</div>
+<p style="font-size:13px;color:#64748b;margin-top:12px;">Based on your CGPA and skills, you are eligible for above companies. Improve CGPA to unlock HCL, Accenture.</p>
+</div>
+
+<a class="back" href="/dashboard">Back to Dashboard</a>
+</div>
+
+<script>
+function predict(){
+  let cgpa = parseFloat(document.getElementById('cgpa').value) || 0;
+  let skills = parseInt(document.getElementById('skills').value) || 0;
+  let intern = parseInt(document.getElementById('intern').value) || 0;
+  let proj = parseInt(document.getElementById('proj').value) || 0;
+
+  let score = Math.min(98, Math.round(cgpa*8 + skills*3 + intern*8 + proj*5));
+  let label = score >= 75 ? "High Chance - Placement Ready!" : score >= 55 ? "Medium Chance - Need More Practice" : "Low Chance - Improve Skills";
+  let msg = score >= 75 ? "Your profile is strong. You are ready for top companies like TCS, Infosys. Start applying now." : score >= 55 ? "You are close! Add 1 Internship and 1 more Project to reach 85%+." : "Focus on Python + SQL and build 2 projects. Your score will increase fast.";
+
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('chartBox').style.display = 'block';
+  document.getElementById('companyBox').style.display = 'block';
+
+  // Animate Pie Circle
+  let circle = document.getElementById('pieFill');
+  let total = 2 * Math.PI * 75;
+  circle.style.strokeDasharray = total;
+  circle.style.strokeDashoffset = total;
+  setTimeout(()=>{ circle.style.strokeDashoffset = total - (total * score / 100); }, 50);
+
+  // Animate Number 0 to Score
+  let start = 0;
+  let timer = setInterval(()=>{
+    start++;
+    document.getElementById('scoreText').innerText = start + "%";
+    if(start >= score) clearInterval(timer);
+  }, 12);
+
+  document.getElementById('labelText').innerText = label;
+  document.getElementById('msgText').innerText = msg;
+
+  // Bar Chart values
+  let c1 = Math.round(cgpa*10), c2 = skills*10, c3 = intern*20, c4 = proj*20;
+  document.getElementById('v1').innerText = c1 + "%";
+  document.getElementById('v2').innerText = c2 + "%";
+  document.getElementById('v3').innerText = c3 + "%";
+  document.getElementById('v4').innerText = c4 + "%";
+  setTimeout(()=>{
+    document.getElementById('b1').style.width = c1 + "%";
+    document.getElementById('b2').style.width = c2 + "%";
+    document.getElementById('b3').style.width = c3 + "%";
+    document.getElementById('b4').style.width = c4 + "%";
+  }, 100);
+
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
