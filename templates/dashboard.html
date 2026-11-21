@@ -1,23 +1,60 @@
 <!DOCTYPE html>
-<html><head><title>Dashboard</title>
-<style>body{font-family:Arial;background:#f2f4f8;margin:0} .top{background:#0d6efd;color:white;padding:15px;text-align:center} .box{background:white;max-width:900px;margin:20px auto;padding:20px;border-radius:10px} .btn{display:inline-block;background:#0d6efd;color:white;padding:10px 15px;margin:5px;border-radius:6px;text-decoration:none} .green{background:#198754} .orange{background:#fd7e14} .red{background:#dc3545} .card{border:1px solid #ddd;padding:12px;margin:10px 0;border-radius:8px}</style>
-</head><body>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Smart Campus Placement Portal</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f2f4f8; color: #1e293b; overflow-x: hidden; }
+.top { background: #0d6efd; color: #fff; padding: 18px 16px; text-align: center; }
+.top h2 { font-size: 22px; line-height: 1.3; }
+.box { background: #fff; width: 100%; max-width: 900px; margin: 20px auto; padding: 22px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.box h2 { font-size: 22px; margin-bottom: 8px; }
+.box h3 { font-size: 18px; margin: 20px 0 10px 0; }
+.box p { font-size: 14px; line-height: 1.6; color: #334155; margin-bottom: 12px; }
+.btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.btn { display: inline-flex; align-items: center; justify-content: center; background: #0d6efd; color: #fff; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; text-align: center; }
+.btn:hover { opacity: 0.9; }
+.green { background: #198754; }
+.orange { background: #fd7e14; }
+.red { background: #dc3545; }
+.card { border: 1px solid #e2e8f0; padding: 14px; margin: 10px 0; border-radius: 8px; font-size: 14px; line-height: 1.6; background: #fff; word-wrap: break-word; }
+.card .btn { margin: 8px 5px 0 0; padding: 8px 12px; font-size: 13px; }
+.stats-line { background: #f8fafc; padding: 12px; border-radius: 8px; font-size: 14px; line-height: 1.8; }
+@media (max-width: 768px) {
+.top { padding: 14px 12px; }
+.top h2 { font-size: 17px; }
+.box { margin: 12px; width: auto; padding: 16px; }
+.box h2 { font-size: 20px; }
+.btn { flex: 1 1 45%; padding: 11px 10px; font-size: 13px; }
+.btn-group .btn { flex: 1 1 100%; }
+}
+@media (max-width: 480px) {
+.top h2 { font-size: 15px; }
+.box { margin: 10px; padding: 14px; }
+.btn { flex: 1 1 100%; width: 100%; }
+.card .btn { width: 100%; margin: 8px 0 0 0; }
+}
+</style>
+</head>
+<body>
 <div class="top"><h2>SMART CAMPUS PLACEMENT PORTAL</h2></div>
 <div class="box">
 <h2>Welcome to Placement Portal</h2>
 {% if session.get('name') %}<p>Logged in as: <b>{{ session.get('name') }} ({{ session.get('role') }})</b></p>{% endif %}
-<p>
+<div class="btn-group">
 <a class="btn" href="/login">Login</a>
 <a class="btn green" href="/login">Login as Admin</a>
 <a class="btn green" href="/login">Login as Company</a>
 <a class="btn orange" href="/login">Login as Student</a>
 <a class="btn" href="/register">Register</a>
 <a class="btn red" href="/logout">Logout</a>
-</p>
+</div>
 <h3>Dashboard</h3>
-<p>Total Students: {{ total_students }} | Total Companies: {{ total_companies }} | Drives: {{ total_drives }} | Applications: {{ total_apps }}</p>
-
+<p class="stats-line">Total Students: {{ total_students }} | Total Companies: {{ total_companies }} | Drives: {{ total_drives }} | Applications: {{ total_apps }}</p>
 <h3>Smart Features</h3>
+<div class="btn-group">
 <a class="btn" href="/ml_prediction">ML Placement Predictor</a>
 <a class="btn" href="/eligibility_checker">Eligibility Checker</a>
 <a class="btn" href="/ats_analyzer">ATS Analyzer</a>
@@ -29,7 +66,7 @@
 <a class="btn" href="/application_tracking">My Applications</a>
 <a class="btn" href="/analytics">Analytics</a>
 {% if session.get('role') == 'Company' %}<a class="btn green" href="/create_drive">+ Create Drive</a>{% endif %}
-
+</div>
 {% if session.get('role') == 'Admin' %}
 <h3>Pending Drives - For Admin Approval</h3>
 {% for d in pending_drives %}
@@ -39,18 +76,18 @@
 {% endfor %}
 {% if not pending_drives %}<p>No pending drives.</p>{% endif %}
 {% endif %}
-
 {% if session.get('role') == 'Company' %}
 <h3>My Drives</h3>
 {% for d in my_drives %}<div class="card"><b>{{ d['title'] }}</b> - {{ d['status'] }} | Min CGPA: {{ d['min_cgpa'] }} | Deadline: {{ d['deadline'] }}</div>{% endfor %}
 <h3>Applications on My Drives</h3>
 {% for a in applications %}<div class="card">{{ a['student_name'] }} - {{ a['title'] }} - {{ a['status'] }} <a class="btn green" href="/select_student/{{ a['id'] }}">Select</a></div>{% endfor %}
 {% endif %}
-
 <h3>Approved Drives</h3>
 {% for d in drives %}
 <div class="card"><b>{{ d['company'] }} - {{ d['title'] }}</b><br>{{ d['description'] }} | Min CGPA: {{ d['min_cgpa'] }} | Deadline: {{ d['deadline'] }}
 {% if session.get('role') == 'Student' %} | <a href="/apply/{{ d['id'] }}">Apply Now</a>{% endif %}</div>
 {% endfor %}
 {% if not drives %}<p>No approved drives yet.</p>{% endif %}
-</div></body></html>
+</div>
+</body>
+</html>
