@@ -1,1 +1,36 @@
-<!DOCTYPE html><html><body style="font-family:Arial;padding:20px;max-width:600px;margin:auto"><h2>2. Company Jobs</h2>{% for c in companies %}<div style="border:1px solid #ccc;padding:12px;margin:8px;border-radius:8px"><b>{{c.name}}</b> - {{c.role}}<br>Min CGPA: {{c.cgpa}} | Package: {{c.package}}<br><a href="/eligibility_checker">Check Eligibility</a></div>{% endfor %}<br><a href="/">Back</a></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Jobs - Smart Campus Placement Portal</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #f2f4f8; color: #1e293b; padding: 20px; overflow-x: hidden; }
+.container { width: 100%; max-width: 600px; margin: 0 auto; }
+h2 { font-size: 22px; margin-bottom: 16px; text-align: center; }
+.job-card { background: #fff; border: 1px solid #e2e8f0; padding: 16px; margin: 10px 0; border-radius: 10px; font-size: 14px; line-height: 1.7; box-shadow: 0 2px 8px rgba(0,0,0,0.04); word-wrap: break-word; }
+.job-card b { font-size: 16px; color: #0f172a; }
+.job-card a { display: inline-block; margin-top: 8px; background: #0d6efd; color: #fff; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 500; }
+.back-link { display: inline-block; margin-top: 16px; background: #64748b; color: #fff; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-size: 14px; }
+.no-jobs { text-align: center; background: #fff; padding: 20px; border-radius: 10px; color: #64748b; font-size: 14px; }
+@media (max-width: 480px) {
+body { padding: 12px; }
+h2 { font-size: 19px; }
+.job-card { padding: 14px; }
+.job-card a { width: 100%; text-align: center; padding: 10px; }
+.back-link { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>2. Company Jobs</h2>
+{% for c in companies %}
+<div class="job-card"><b>{{c.name}}</b> - {{c.role}}<br>Min CGPA: {{c.cgpa}} | Package: {{c.package}}<br><a href="/eligibility_checker">Check Eligibility</a></div>
+{% endfor %}
+{% if not companies %}<div class="no-jobs">No company jobs available yet.</div>{% endif %}
+<br><a class="back-link" href="/">Back</a>
+</div>
+</body>
+</html>
